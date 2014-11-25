@@ -1,0 +1,10 @@
+GEM
+  remote: https://rubygems.org/
+  specs:
+    gmath3D (1.0.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  gmath3D
