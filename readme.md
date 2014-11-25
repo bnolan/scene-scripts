@@ -9,3 +9,7 @@ Clone the repo, `bundle install`, install imagemagick (we resize the images for 
 `ruby reddit-gallery.rb`
 
 You'll get some progress messages, the scene and it's images will be generated in the scenes subdirectory.
+
+## Screenshot
+
+![Street art gallery](http://i.imgur.com/YUWHFqR.png)
