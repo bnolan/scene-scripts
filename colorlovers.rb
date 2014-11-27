@@ -1,5 +1,4 @@
-# Generate a gallery from an image gallery subreddit. Requires imagemagick to be installed in your
-# path. Assumes the billboards are rendered at 512x512.
+# Generate a gallery for a colorlovers palette.
 
 require 'open-uri'
 require 'json'
