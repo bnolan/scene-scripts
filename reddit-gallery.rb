@@ -8,7 +8,7 @@ require 'uri'
 # For the vector class
 require 'gmath3D'
 
-SUBREDDIT = "macroporn".downcase
+SUBREDDIT = "aww".downcase
 DOWNLOAD = true
 
 puts "Fetching /r/#{SUBREDDIT} as json..."
@@ -42,9 +42,11 @@ json["data"]["children"].each do |child|
 
   puts " * #{uri.to_s}"
 
-  `curl #{uri.to_s} -s -o scenes/images/r-#{SUBREDDIT}-#{i}#{extension}` if DOWNLOAD
-  `mogrify -resize 500x450 scenes/images/r-#{SUBREDDIT}-#{i}#{extension}` if DOWNLOAD
-
+  if DOWNLOAD
+    `curl #{uri.to_s} -s -o scenes/images/r-#{SUBREDDIT}-#{i}#{extension}` || next
+    `mogrify -resize 500x450 scenes/images/r-#{SUBREDDIT}-#{i}#{extension}` || next
+  end
+  
   x = i % 5
   z = (i / 5).floor
 
