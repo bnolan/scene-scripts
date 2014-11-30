@@ -1,5 +1,5 @@
-# Generate a gallery from an image gallery subreddit. Requires imagemagick. Assumes the billboards are rendered
-# at 512x512.
+# Generate a gallery from an image gallery subreddit. Requires imagemagick to be installed in your
+# path. Assumes the billboards are rendered at 512x512.
 
 require 'open-uri'
 require 'json'
@@ -8,7 +8,7 @@ require 'uri'
 # For the vector class
 require 'gmath3D'
 
-SUBREDDIT = "retrogameporn".downcase
+SUBREDDIT = "aww".downcase
 DOWNLOAD = true
 
 puts "Fetching /r/#{SUBREDDIT} as json..."
@@ -42,22 +42,24 @@ json["data"]["children"].each do |child|
 
   puts " * #{uri.to_s}"
 
-  `curl #{uri.to_s} -s -o scenes/images/r-#{SUBREDDIT}-#{i}#{extension}` if DOWNLOAD
-  `mogrify -resize 500x450 scenes/images/r-#{SUBREDDIT}-#{i}#{extension}` if DOWNLOAD
-
+  if DOWNLOAD
+    `curl #{uri.to_s} -s -o scenes/images/r-#{SUBREDDIT}-#{i}#{extension}` || next
+    `mogrify -resize 500x450 scenes/images/r-#{SUBREDDIT}-#{i}#{extension}` || next
+  end
+  
   x = i % 5
   z = (i / 5).floor
 
-  v = GMath3D::Vector3.new(x, 0, -z) * 10
-  v += GMath3D::Vector3.new(5, 2.5, -5)
+  v = GMath3D::Vector3.new(x, 0, -z) * 5
+  v += GMath3D::Vector3.new(5, 1.5, -5)
 
   height = `identify scenes/images/r-#{SUBREDDIT}-#{i}#{extension}`.match(/x(\d+)/)[1].to_i
-  margin = (512 - 20 - height) / 2
+  margin = (512 - 40 - height) / 2
 
   xml += <<-EOF
-    <billboard position="#{v.x} #{v.y} #{v.z}" rotation="0 0 0" scale="5 5 0.5">
+    <billboard position="#{v.x} #{v.y} #{v.z}" rotation="0 0 0" scale="3 3 0.3">
       <![CDATA[
-        <center style="margin-top: #{margin}px">
+        <center style="margin-top: #{margin}px; font-size: 2em">
           <img src="/images/r-#{SUBREDDIT}-#{i}#{extension}" style="max-width: 100%" /><br />
           #{title}
         </center>
