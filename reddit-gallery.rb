@@ -8,12 +8,14 @@ require 'uri'
 # For the vector class
 require 'gmath3D'
 
-SUBREDDIT = "aww".downcase
+SUBREDDIT = ARGV.last.downcase
 DOWNLOAD = true
-
+TOTAL_COUNT = 30
 puts "Fetching /r/#{SUBREDDIT} as json..."
 
-json = JSON.parse(open("http://www.reddit.com/r/#{SUBREDDIT}.json").readlines.join)
+`mkdir -p scenes/images`
+
+json = JSON.parse(open("http://www.reddit.com/r/#{SUBREDDIT}.json?limit=100").readlines.join)
 
 puts "Downloading and resizing images..."
 
@@ -53,7 +55,7 @@ json["data"]["children"].each do |child|
   v = GMath3D::Vector3.new(x, 0, -z) * 5
   v += GMath3D::Vector3.new(5, 1.5, -5)
 
-  height = `identify scenes/images/r-#{SUBREDDIT}-#{i}#{extension}`.match(/x(\d+)/)[1].to_i
+  height = `identify scenes/images/r-#{SUBREDDIT}-#{i}#{extension}`.match(/x(\d+)/)[1].to_i rescue next
   margin = (512 - 40 - height) / 2
 
   xml += <<-EOF
@@ -68,6 +70,8 @@ json["data"]["children"].each do |child|
 EOF
 
   i += 1
+
+  break if i > TOTAL_COUNT
 end
 
 xml += "</scene>"
