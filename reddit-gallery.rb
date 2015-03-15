@@ -10,7 +10,8 @@ require 'gmath3D'
 
 SUBREDDIT = ARGV.last.downcase
 DOWNLOAD = true
-TOTAL_COUNT = 2
+TOTAL_COUNT = 30
+TRUNCATE = 35
 puts "Fetching /r/#{SUBREDDIT} as json..."
 
 `mkdir -p scenes/images`
@@ -31,9 +32,9 @@ i = 0
 json["data"]["children"].each do |child|
   story = child["data"]
 
-  title = story["title"].slice(0,40)
+  title = story["title"].slice(0,TRUNCATE)
   
-  if title.length == 40
+  if title.length == TRUNCATE
     title = title.sub(/\.+$/, '') + "..."
   end
 
@@ -71,7 +72,7 @@ EOF
 
   i += 1
 
-  break if i > TOTAL_COUNT
+  break if i >= TOTAL_COUNT
 end
 
 xml += "</scene>"
