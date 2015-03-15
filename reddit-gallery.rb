@@ -10,7 +10,7 @@ require 'gmath3D'
 
 SUBREDDIT = ARGV.last.downcase
 DOWNLOAD = true
-TOTAL_COUNT = 30
+TOTAL_COUNT = 2
 puts "Fetching /r/#{SUBREDDIT} as json..."
 
 `mkdir -p scenes/images`
@@ -24,16 +24,16 @@ puts "Downloading and resizing images..."
 xml = "<scene>\n"
 xml += <<-EOF
   <spawn position="0 0 0" />
-
+  <skybox style="color: linear-gradient(#fff, #555)" />
 EOF
 
 i = 0
 json["data"]["children"].each do |child|
   story = child["data"]
 
-  title = story["title"].slice(0,70)
+  title = story["title"].slice(0,40)
   
-  if title.length == 70
+  if title.length == 40
     title = title.sub(/\.+$/, '') + "..."
   end
 
@@ -56,12 +56,12 @@ json["data"]["children"].each do |child|
   v += GMath3D::Vector3.new(5, 1.5, -5)
 
   height = `identify scenes/images/r-#{SUBREDDIT}-#{i}#{extension}`.match(/x(\d+)/)[1].to_i rescue next
-  margin = (512 - 40 - height) / 2
+  margin = (512 - 64 - height) / 2
 
   xml += <<-EOF
     <billboard position="#{v.x} #{v.y} #{v.z}" rotation="0 0 0" scale="3 3 0.3">
       <![CDATA[
-        <center style="margin-top: #{margin}px; font-size: 2em">
+        <center style="margin-top: #{margin}px; font-size: 24px">
           <img src="/images/r-#{SUBREDDIT}-#{i}#{extension}" style="max-width: 100%" /><br />
           #{title}
         </center>
